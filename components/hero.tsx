@@ -1,6 +1,7 @@
+import type { Dictionary } from "@/lib/i18n";
 import { DnaIcon } from "./icons";
 
-export function Hero() {
+export function Hero({ dict }: { dict: Dictionary }) {
   return (
     <div className="relative overflow-hidden bg-blue-600 px-8 py-9 dark:bg-blue-700">
       <svg
@@ -26,15 +27,20 @@ export function Hero() {
         <line x1="140" y1="22" x2="140" y2="38" stroke="white" strokeWidth={2} />
       </svg>
 
+      <a
+        href={dict.languageSwitch.href}
+        className="absolute right-4 top-4 rounded-full bg-white/15 px-3 py-1 text-xs text-white hover:bg-white/25"
+      >
+        {dict.languageSwitch.label}
+      </a>
+
       <div className="relative flex items-center gap-4">
         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-white/15">
           <DnaIcon className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-medium text-white">DNA相補鎖ツール</h1>
-          <p className="mt-1 text-[15px] text-white">
-            DNA配列・FASTA形式に対応、逆相補鎖とmRNAを瞬時に計算
-          </p>
+          <h1 className="text-2xl font-medium text-white">{dict.hero.title}</h1>
+          <p className="mt-1 text-[15px] text-white">{dict.hero.subtitle}</p>
         </div>
       </div>
     </div>

@@ -1,8 +1,10 @@
 import type { Enzyme } from "@/lib/enzymes";
+import type { Dictionary } from "@/lib/i18n";
 import { ScissorsIcon, TransformIcon } from "./icons";
 import { ToggleSwitch } from "./toggle-switch";
 
 type OptionsPanelProps = {
+  dict: Dictionary;
   mrnaMode: boolean;
   onMrnaModeChange: (checked: boolean) => void;
   enzymeMode: boolean;
@@ -13,6 +15,7 @@ type OptionsPanelProps = {
 };
 
 export function OptionsPanel({
+  dict,
   mrnaMode,
   onMrnaModeChange,
   enzymeMode,
@@ -30,14 +33,14 @@ export function OptionsPanel({
           </span>
           <span className="min-w-0">
             <span className="block text-sm font-medium text-blue-700 dark:text-blue-300">
-              mRNA表示に切り替える
+              {dict.options.mrnaTitle}
             </span>
             <span className="block text-xs text-blue-700 dark:text-blue-300">
-              T→Uに置換して表示
+              {dict.options.mrnaSubtitle}
             </span>
           </span>
         </div>
-        <ToggleSwitch checked={mrnaMode} onChange={onMrnaModeChange} label="mRNA表示に切り替える" />
+        <ToggleSwitch checked={mrnaMode} onChange={onMrnaModeChange} label={dict.options.mrnaTitle} />
       </div>
 
       <div>
@@ -48,17 +51,17 @@ export function OptionsPanel({
             </span>
             <span className="min-w-0">
               <span className="block text-sm font-medium text-purple-700 dark:text-purple-300">
-                制限酵素部位をハイライト
+                {dict.options.enzymeTitle}
               </span>
               <span className="block text-xs text-purple-700 dark:text-purple-300">
-                認識配列を色分け表示
+                {dict.options.enzymeSubtitle}
               </span>
             </span>
           </div>
           <ToggleSwitch
             checked={enzymeMode}
             onChange={onEnzymeModeChange}
-            label="制限酵素部位をハイライト"
+            label={dict.options.enzymeTitle}
           />
         </div>
 

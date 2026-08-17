@@ -1,13 +1,12 @@
 import { ImageResponse } from "next/og";
 
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
+export const OG_IMAGE_CONTENT_TYPE = "image/png";
 
-// Satori's default font has no Japanese glyphs and embedding a CJK subset
-// is out of scope for now, so this OG image uses the Latin product name
-// rather than risk rendering blank boxes for 日本語. The page itself stays
-// Japanese-only per requirements.md.
-export default async function Image() {
+// Satori's default font has no Japanese glyphs and embedding a CJK subset is
+// out of scope for now, so this OG image uses the Latin product name rather
+// than risk rendering blank boxes for 日本語. It's shared by both locales.
+export function buildOgImage() {
   return new ImageResponse(
     (
       <div
@@ -41,6 +40,6 @@ export default async function Image() {
         </div>
       </div>
     ),
-    { ...size }
+    { ...OG_IMAGE_SIZE }
   );
 }

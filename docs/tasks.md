@@ -70,7 +70,17 @@
 - [ ] Google Search Consoleへのsitemap登録
 - [ ] SNS(X、Zenn/Qiita等)での発信
 - [ ] GitHub Sponsors有効化(`tomozouh3-png`。銀行口座登録等が必要なため本人対応。有効化後、寄付リンクをフッターに追加する)
-- [ ] Google AdSense申し込み・審査(説明コンテンツ追加後に実施推奨)。承認後、広告コードを組み込む
+- [x] Google AdSense申し込み・審査対応。スクリプト方式で検証失敗 → メタタグ方式(`other["google-adsense-account"]`)に切り替えて対応
+
+## フェーズ6: 多言語対応(日本語 / 英語)
+
+- [x] `lib/i18n/`: Dictionary型・ja/en翻訳データ・`getDictionary()`
+- [x] 全コンポーネントを`dict`(または`locale`)駆動に変更
+- [x] `app/(ja)/` と `app/en/` に分割(複数root layout)、`app/layout.tsx`は廃止
+- [x] ヒーローに言語切替リンクを追加
+- [x] `sitemap.ts`に両ロケール+hreflang alternatesを追加
+- [x] `lib/og-image.tsx`共通化 + 各ロケールディレクトリに`opengraph-image.tsx`を配置(共有root layoutが無いと親ディレクトリのファイル規約が拾われない罠を回避)
+- [x] ブラウザ実機で発覚した2件の実行時エラーを修正(辞書の関数をClient Componentへpropsで渡さない/`beforeInteractive`スクリプトは`<body>`内に置く)。詳細は`nextjs-best-practices.md`8章
 
 ## デプロイ情報
 

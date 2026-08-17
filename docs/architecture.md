@@ -10,32 +10,48 @@
 - 状態管理ライブラリは使わない(React標準のuseStateで完結する規模)
 - サーバーAPI・DBなし。全処理はクライアントサイド
 
-## 2. ディレクトリ構成(予定)
+## 2. ディレクトリ構成(実装後の実態。多言語対応込み)
+
+日本語(`/`)と英語(`/en`)を[複数root layout](https://nextjs.org/docs/app/api-reference/file-conventions/layout#root-layout)で実装している。共有の `app/layout.tsx` は置かず、`app/(ja)/layout.tsx` と `app/en/layout.tsx` がそれぞれ独立したroot layout(`<html>`/`<body>` を持つ)。詳細な罠は `nextjs-best-practices.md` 8章を参照。
 
 ```
 app/
-  layout.tsx            # ルートレイアウト、メタデータ、フォント
-  page.tsx               # トップページ(Server Component)。searchParamsのseqを読み取りClient Componentへ渡す
-  opengraph-image.tsx     # OGP画像生成(6.1 SEO対策)
-  sitemap.ts              # sitemap.xml生成
-  robots.ts               # robots.txt生成
+  (ja)/
+    layout.tsx           # 日本語root layout(lang="ja")
+    page.tsx              # searchParamsのseqを読み取りHomePageへ渡す
+    opengraph-image.tsx    # OGP画像(lib/og-image.tsxを呼ぶだけ)
+  en/
+    layout.tsx            # 英語root layout(lang="en")
+    page.tsx               # 同上
+    opengraph-image.tsx     # 同上
+  sitemap.ts               # 両ロケールのURL+hreflang alternatesを出力
+  robots.ts
   globals.css
 
 components/
-  dna-tool.tsx            # "use client" 本体。状態管理のハブ
-  hero.tsx                 # ヘッダー帯(アイコン+タイトル+装飾)
-  sequence-input.tsx       # 入力欄+フォーマットバッジ+エラー表示+操作ボタン
-  options-panel.tsx        # mRNAトグル・制限酵素トグル+酵素選択(サイドバー上部)
-  history-panel.tsx        # 入力履歴リスト(サイドバー下部)
-  result-card.tsx          # 配列1件分の結果カード(出力・制限酵素・補助情報)
-  base-pill.tsx             # 塩基1文字を色付き表示する小コンポーネント
+  home-page.tsx            # ページ本体(Server Component)。JSON-LD+DnaTool+AboutSection+SiteFooterを組み立てる
+  dna-tool.tsx              # "use client" 本体。状態管理のハブ。localeを受け取りgetDictionary()で辞書解決
+  hero.tsx                   # ヘッダー帯(アイコン+タイトル+言語切替リンク)
+  options-panel.tsx          # mRNAトグル・制限酵素トグル+酵素選択(サイドバー上部)
+  history-panel.tsx          # 入力履歴リスト(サイドバー下部)
+  result-card.tsx            # 配列1件分の結果カード(出力・制限酵素・補助情報)
+  about-section.tsx           # 使い方・逆相補鎖とは・主な機能(SEO用コンテンツ)
+  site-footer.tsx              # フッター
+  base-pill.tsx                 # 塩基1文字を色付き表示する小コンポーネント
 
 lib/
   dna.ts                    # complement, reverseComplement, gcContent, baseComposition
   fasta.ts                  # parseFasta(text) -> {label, raw}[]
   enzymes.ts                 # 制限酵素プリセット定義 + findSites()
-  history.ts                  # localStorage読み書き(最大30件)のラッパー
+  history.ts                  # useSyncExternalStoreベースのuseHistory()フック
   validate.ts                  # ATGC以外の文字検出
+  site.ts                       # SITE_URL, ADSENSE_CLIENT_ID, buildMetadata(), buildJsonLd()
+  fonts.ts                       # 両root layoutで共有するnext/fontインスタンス
+  og-image.tsx                    # OGP画像生成の共通実装
+  i18n/
+    types.ts                       # Dictionary型定義
+    ja.ts / en.ts                   # 翻訳データ(関数値を含む — 8.1の理由でServer→Clientへ直接渡さないこと)
+    index.ts                        # getDictionary(locale)
 ```
 
 Next.jsのファイル規約(`page`/`layout`/metadata系ファイル)は `app/` 直下に置き、UIロジックは `components/`、純粋関数は `lib/` に分離する。`app/page.tsx` はサーバーコンポーネントのまま保ち、インタラクティブな部分は `components/dna-tool.tsx` に `"use client"` を付けて切り出す。

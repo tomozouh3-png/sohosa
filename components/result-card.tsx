@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { baseComposition, gcContent, reverseComplement, toMrna } from "@/lib/dna";
 import { findSites, type Enzyme } from "@/lib/enzymes";
+import type { Dictionary } from "@/lib/i18n";
 import { BasePill } from "./base-pill";
 import { AlertIcon, CheckIcon, CopyIcon, DnaIcon, PaletteIcon } from "./icons";
 
@@ -79,11 +80,13 @@ function renderHighlighted(
 }
 
 export function ResultCard({
+  dict,
   record,
   mrnaMode,
   enzymeMode,
   selectedEnzymes,
 }: {
+  dict: Dictionary;
   record: ValidatedRecord;
   mrnaMode: boolean;
   enzymeMode: boolean;
@@ -94,7 +97,7 @@ export function ResultCard({
       <div className="mb-3.5 flex items-center gap-2 rounded-xl bg-red-50 px-5 py-4 dark:bg-red-950">
         <AlertIcon className="h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
         <span className="text-sm text-red-700 dark:text-red-300">
-          {record.label}: ATGC以外の文字が含まれています({record.invalid.join(", ")})
+          {dict.result.invalidChars(record.label, record.invalid.join(", "))}
         </span>
       </div>
     );
@@ -102,6 +105,7 @@ export function ResultCard({
 
   return (
     <ValidResultCard
+      dict={dict}
       record={record}
       mrnaMode={mrnaMode}
       enzymeMode={enzymeMode}
@@ -111,11 +115,13 @@ export function ResultCard({
 }
 
 function ValidResultCard({
+  dict,
   record,
   mrnaMode,
   enzymeMode,
   selectedEnzymes,
 }: {
+  dict: Dictionary;
   record: ValidatedRecord;
   mrnaMode: boolean;
   enzymeMode: boolean;
@@ -128,7 +134,7 @@ function ValidResultCard({
   const gcPct = gcContent(record.raw);
   const displayText = mrnaMode ? toMrna(rc) : rc;
   const displayArr = displayText.split("");
-  const outputLabel = mrnaMode ? "mRNA(5' → 3')" : "逆相補鎖(5' → 3')";
+  const outputLabel = mrnaMode ? dict.result.mrnaLabel : dict.result.rcLabel;
 
   const showEnzyme = enzymeMode && selectedEnzymes.length > 0;
   const siteMap = showEnzyme ? findSites(record.raw, selectedEnzymes) : null;
@@ -150,9 +156,7 @@ function ValidResultCard({
           <DnaIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           {record.label}
         </span>
-        <span className="text-sm text-zinc-400">
-          {baseArr.length} 塩基 ・ GC {gcPct}%
-        </span>
+        <span className="text-sm text-zinc-400">{dict.result.statLine(baseArr.length, gcPct)}</span>
       </div>
 
       <div className="mb-2.5 flex items-center justify-between">
@@ -165,7 +169,7 @@ function ValidResultCard({
           className="flex items-center gap-1.5 rounded-md border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
         >
           {copied ? <CheckIcon className="h-3.5 w-3.5" /> : <CopyIcon className="h-3.5 w-3.5" />}
-          {copied ? "コピー済み" : "コピー"}
+          {copied ? dict.buttons.copied : dict.buttons.copy}
         </button>
       </div>
       <div className="mb-4 break-all rounded-lg border-2 border-blue-300 bg-blue-50 px-5 py-4 font-mono text-xl font-medium leading-relaxed tracking-wide dark:border-blue-800 dark:bg-blue-950">
@@ -174,7 +178,7 @@ function ValidResultCard({
 
       {showEnzyme && siteMap && (
         <div className="mb-3.5 border-t border-zinc-100 pt-3.5 dark:border-zinc-800">
-          <p className="mb-1.5 text-xs text-zinc-400">制限酵素認識部位(入力配列上)</p>
+          <p className="mb-1.5 text-xs text-zinc-400">{dict.result.enzymeSectionTitle}</p>
           <div className="mb-2 flex flex-wrap gap-1.5">
             {selectedEnzymes.map((enzyme) => {
               const count = siteMap.get(enzyme.name)?.length ?? 0;
@@ -185,7 +189,7 @@ function ValidResultCard({
                     ENZYME_BADGE[enzyme.name] ?? "bg-zinc-100 text-zinc-600"
                   }`}
                 >
-                  {enzyme.name} {count > 0 ? `×${count}` : "なし"}
+                  {enzyme.name} {count > 0 ? `×${count}` : dict.result.enzymeNone}
                 </span>
               );
             })}
@@ -199,7 +203,7 @@ function ValidResultCard({
       <div className="border-t border-zinc-100 pt-4 dark:border-zinc-800">
         <p className="mb-2.5 flex items-center gap-1.5 text-xs text-zinc-400">
           <PaletteIcon className="h-3.5 w-3.5" />
-          塩基の色分け・構成比・ペアリング
+          {dict.result.auxTitle}
         </p>
 
         <div className="mb-3 flex flex-wrap gap-0.5 font-mono text-[11px] leading-loose">
@@ -229,9 +233,7 @@ function ValidResultCard({
           })}
         </div>
 
-        <p className="mb-2 text-xs text-zinc-400">
-          塩基対のペアリング(上: 入力鎖 5&apos;→3&apos; / 下: 相補鎖 3&apos;→5&apos;)
-        </p>
+        <p className="mb-2 text-xs text-zinc-400">{dict.result.pairingTitle}</p>
         {showLadder ? (
           <div className="flex flex-wrap gap-1 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
             {baseArr.map((base, i) => (
@@ -243,18 +245,16 @@ function ValidResultCard({
             ))}
           </div>
         ) : (
-          <p className="text-xs text-zinc-400">
-            配列が長いため表示を省略しています({LADDER_LIMIT}塩基以下で表示)
-          </p>
+          <p className="text-xs text-zinc-400">{dict.result.ladderOmitted(LADDER_LIMIT)}</p>
         )}
 
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-800">
-            <p className="mb-1 text-xs text-zinc-400">配列長</p>
-            <p className="text-xl font-medium">{baseArr.length} 塩基</p>
+            <p className="mb-1 text-xs text-zinc-400">{dict.result.lengthLabel}</p>
+            <p className="text-xl font-medium">{dict.result.lengthValue(baseArr.length)}</p>
           </div>
           <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-800">
-            <p className="mb-1.5 text-xs text-zinc-400">GC含量</p>
+            <p className="mb-1.5 text-xs text-zinc-400">{dict.result.gcLabel}</p>
             <p className="mb-1.5 text-xl font-medium">{gcPct}%</p>
             <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
               <div

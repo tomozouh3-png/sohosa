@@ -93,12 +93,12 @@ mRNA変換は「入力=鋳型鎖、逆相補鎖のT→UがmRNA」という要件
 - キー: `dna-tool:history`
 - 値: `{ text: string; date: string(ISO) }[]`、先頭が最新、最大30件
 - 保存タイミング: 「相補鎖に変換する」ボタン押下時、直前の履歴と同一テキストでなければ先頭に追加
-- SSR時は `localStorage` が存在しないため、`lib/history.ts` の読み込みは `useEffect` 内で行う(初期レンダーは空配列)
+- SSR時は `localStorage` が存在しないため、`useState` のlazy initializer(`useState(() => typeof window === "undefined" ? [] : readHistory())`)で読み込む。`useEffect` は使わない(理由は `nextjs-best-practices.md` 3章)
 
 ## 7. URL共有(`?seq=`)
 
 - `app/page.tsx`(Server Component)で `searchParams.seq` を読み取り、初期入力値として `DnaTool` に渡す
-- クライアント側で「相補鎖に変換する」を押した際、`history.replaceState` 等でURLに現在の入力を反映する(ページ遷移を伴わない形を想定。具体的なAPIは実装時に `node_modules/next/dist/docs/01-app/02-guides/` を確認して決める)
+- クライアント側で「相補鎖に変換する」を押した際、`window.history.replaceState(null, "", ...)` を直接呼んでURLに現在の入力を反映する(`next/navigation` の `useSearchParams` と組み合わせる。詳細は `nextjs-best-practices.md` 4章)
 - 配列が長大な場合のURL長超過は既知の制約として許容する(スコープ外)
 
 ## 8. SEO / メタデータ
@@ -115,7 +115,10 @@ Next.jsのファイル規約(`node_modules/next/dist/docs/01-app/01-getting-star
 - 既存のTailwind v4 + `@theme inline` トークン(`--color-background` 等)をベースに、モックアップで使用したアクセントカラー・カード・トグルスイッチの見た目をTailwindユーティリティ、または `globals.css` のCSS変数追加で再現する
 - ダークモード: 現状 `globals.css` に `prefers-color-scheme: dark` の分岐が既にあるため、それを踏襲する
 
-## 10. 未決定・実装時に要確認
+## 10. Next.jsのバージョン固有の注意点
 
-- URLクエリパラメータ更新の具体的なAPI(App Router内のルーターAPIは学習データと差異がある可能性があるため実装直前にdocsを確認)
+このプロジェクトのNext.js(16.3.1)は `AGENTS.md` が警告するとおり学習データと差異がある。実装前に必ず `docs/nextjs-best-practices.md` を確認すること(Server/Client Components分割、`use cache`を使わない理由、localStorage読み込みパターン、URL同期API、`error.tsx` のprops名など)。
+
+## 11. 未決定・実装時に要確認
+
 - 長大配列(数万塩基)でのパフォーマンス方針は要件定義書8章のとおりスコープ外

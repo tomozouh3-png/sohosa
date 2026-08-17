@@ -28,34 +28,44 @@ Next.js 16では `next.config.ts` で `cacheComponents: true` を有効にする
 
 **このプロジェクトでは有効化しない。** 外部API・DBを一切呼ばずクライアント側で完結する要件(`requirements.md` 6.3)のため、キャッシュ対象のデータ取得自体が存在しない。`next.config.ts` はデフォルトのまま(`cacheComponents` を設定しない)でよい。
 
-## 3. localStorageを読む処理は「lazy useState initializer」パターンを使う
+## 3. localStorageを読む処理: `useSyncExternalStore` を使う(2回目の訂正)
 
-`useEffect` でlocalStorageを読んで `setState` すると、初回描画(空)→ 読み込み後の描画(履歴あり)で画面がちらつく。公式ガイド(`preventing-flash-before-hydration.md`)が推奨するのは、`useState` の初期化関数内で直接読む方法:
+公式ガイド(`preventing-flash-before-hydration.md`)の「Syncing with React state」は `useState` のlazy initializerを紹介しているが、これはサーバーの既定値とクライアントのハイドレーション時レンダーの値が食い違いハイドレーションエラーになる(lazy initializerはハイドレーション時、`window` が存在するブラウザ上で実行されるため)。ガイドの例が成立するのは、ハイドレーション前にインラインスクリプトがDOMを実際の値へ書き換えているから。入力履歴のような動的リストではその仕組みを再現するコストが見合わない。
 
-```tsx
-const [history, setHistory] = useState<HistoryItem[]>(() => {
-  if (typeof window === "undefined") return [];
-  return readHistory(); // lib/history.ts
-});
+そこで一旦 `useEffect` + `setState` に切り替えたが、これは `eslint-plugin-react-hooks` の `react-hooks/set-state-in-effect` ルールに引っかかる(`npm run lint` で実際に検出された)。このルールは「外部システム(localStorageなど)と同期する状態は `useSyncExternalStore` を使うべき」という考え方に基づく。最終的に採用したのは `useSyncExternalStore`:
+
+```ts
+// lib/history.ts
+function subscribe(onStoreChange: () => void) { /* ... */ }
+function getSnapshot(): HistoryItem[] { /* localStorageから読む(クライアントのみ) */ }
+function getServerSnapshot(): HistoryItem[] { return []; } // SSRは常に空配列
+
+export function useHistory() {
+  const history = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  // ...
+}
 ```
 
-- サーバーでは `window` が無いため空配列を返す(SSR結果と初回クライアント描画が一致するのでハイドレーションエラーにならない)
-- クライアントの初回レンダリングで即座に履歴を反映できるので、`useEffect` 経由よりチラつきが少ない
+- `getServerSnapshot` はサーバーで常に空配列を返すため、ハイドレーション時の不一致は起きない
+- `getSnapshot` はクライアントでのみ実際の値を返す。Reactは「サーバー値→クライアント値」の切り替えを正しいタイミングで扱ってくれる(lazy initializerと違い、Reactの管轄下にあるAPIのため)
+- `addItem`/`clear` などの更新関数もこのモジュール内に閉じ込め、リスナーに通知することで再レンダーをトリガーする。これによりESLintの `set-state-in-effect` にも引っかからない
+- 副次的な利点として、複数タブを開いていても `storage` イベントで同期させやすい構造になっている(現時点では未実装、将来追加しやすい設計)
 
-> **architecture.mdの訂正**: 「6. 入力履歴」に書いた「`useEffect` 内で読み込む」は上記のlazy initializerパターンに置き換える。
+## 4. URLクエリパラメータ(`?seq=`)の同期は `window.history.replaceState`
 
-## 4. URLクエリパラメータ(`?seq=`)の同期は `window.history.replaceState` + `useSearchParams`
+`linking-and-navigating.md` に載っている公式パターン(`router.replace()` ではなくネイティブHistory APIを直接呼ぶ)をベースに採用。`router.replace()`(next/navigationのuseRouter)はNext.jsのルーター/RSCフェッチを経由し今回の用途にはオーバースペックなため使わない。
 
-`linking-and-navigating.md` に載っている公式パターンをそのまま採用する。`router.replace()`(next/navigationのuseRouter)はNext.jsのルーター/RSCフェッチを経由し今回の用途にはオーバースペックなため、ネイティブHistory APIを直接呼ぶ。
+ドキュメントの例は現在のクエリを `useSearchParams()` フックで購読しているが、このプロジェクトでは実装をさらに単純化し、URL更新はボタンのクリックハンドラ内でのみ行う(レンダー中は参照しない)ため、フックで購読する必要がない。イベントハンドラ内は常にブラウザ上で実行されるので `window.location.search` を直接読めばよく、`useSearchParams()` 特有の[Suspense境界の要件](https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout)(静的prerender時にラップが必須になる制約)も回避できる:
 
 ```tsx
 "use client";
-import { useSearchParams } from "next/navigation";
 
 function updateShareUrl(seq: string) {
-  const params = new URLSearchParams(searchParams.toString());
-  params.set("seq", seq);
-  window.history.replaceState(null, "", `?${params.toString()}`);
+  const params = new URLSearchParams(window.location.search);
+  if (seq.trim()) params.set("seq", seq);
+  else params.delete("seq");
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
 }
 ```
 
@@ -106,7 +116,7 @@ export default function ErrorPage({
 
 1. インタラクティブな本体は1つのClient Component(`dna-tool.tsx`)にまとめ、`app/page.tsx` はServer Componentのまま薄く保つ
 2. `cacheComponents` は有効化しない(データ取得がないため不要)
-3. localStorage(入力履歴)は `useState` のlazy initializerで読む。`useEffect` は使わない
+3. localStorage(入力履歴)は `useSyncExternalStore` で読み書きする(lazy initializerはハイドレーション不一致、`useEffect`+setStateはESLintの`set-state-in-effect`に抵触するため不採用)
 4. URL共有は `window.history.replaceState` を直接呼ぶ。`router.push`/`router.replace` は使わない
 5. メタデータ・OGP・sitemap・robotsはNext.jsのファイル規約どおりに配置する
 6. `error.tsx` を書く場合、propsは `retry`(`reset` ではない)

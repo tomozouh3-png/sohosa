@@ -93,12 +93,12 @@ mRNA変換は「入力=鋳型鎖、逆相補鎖のT→UがmRNA」という要件
 - キー: `dna-tool:history`
 - 値: `{ text: string; date: string(ISO) }[]`、先頭が最新、最大30件
 - 保存タイミング: 「相補鎖に変換する」ボタン押下時、直前の履歴と同一テキストでなければ先頭に追加
-- SSR時は `localStorage` が存在しないため、`useState` のlazy initializer(`useState(() => typeof window === "undefined" ? [] : readHistory())`)で読み込む。`useEffect` は使わない(理由は `nextjs-best-practices.md` 3章)
+- SSR時は `localStorage` が存在しないため、`lib/history.ts` の `useHistory()`(`useSyncExternalStore` ベース)経由で読み書きする。lazy initializerはハイドレーション不一致、`useEffect`+setStateはESLintの `react-hooks/set-state-in-effect` に抵触するため不採用(理由は `nextjs-best-practices.md` 3章)
 
 ## 7. URL共有(`?seq=`)
 
 - `app/page.tsx`(Server Component)で `searchParams.seq` を読み取り、初期入力値として `DnaTool` に渡す
-- クライアント側で「相補鎖に変換する」を押した際、`window.history.replaceState(null, "", ...)` を直接呼んでURLに現在の入力を反映する(`next/navigation` の `useSearchParams` と組み合わせる。詳細は `nextjs-best-practices.md` 4章)
+- クライアント側で「相補鎖に変換する」を押した際、`window.history.replaceState(null, "", ...)` を直接呼んでURLに現在の入力を反映する(イベントハンドラ内でのみ `window.location.search` を読むので `useSearchParams` は使わない。詳細は `nextjs-best-practices.md` 4章)
 - 配列が長大な場合のURL長超過は既知の制約として許容する(スコープ外)
 
 ## 8. SEO / メタデータ

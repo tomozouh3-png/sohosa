@@ -144,31 +144,31 @@ function ValidResultCard({
   }
 
   return (
-    <div className="mb-3.5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="mb-3 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm font-medium">
-          <DnaIcon className="h-[15px] w-[15px] text-blue-600 dark:text-blue-400" />
+    <div className="mb-4 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="mb-3.5 flex items-center justify-between">
+        <span className="flex items-center gap-2 text-[15px] font-medium">
+          <DnaIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           {record.label}
         </span>
-        <span className="text-xs text-zinc-400">
+        <span className="text-sm text-zinc-400">
           {baseArr.length} 塩基 ・ GC {gcPct}%
         </span>
       </div>
 
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-[15px] font-medium text-blue-700 dark:text-blue-400">
+      <div className="mb-2.5 flex items-center justify-between">
+        <span className="text-base font-medium text-blue-700 dark:text-blue-400">
           {outputLabel}
         </span>
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1 rounded-md border border-zinc-200 px-2.5 py-1 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+          className="flex items-center gap-1.5 rounded-md border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
         >
           {copied ? <CheckIcon className="h-3.5 w-3.5" /> : <CopyIcon className="h-3.5 w-3.5" />}
           {copied ? "コピー済み" : "コピー"}
         </button>
       </div>
-      <div className="mb-3.5 break-all rounded-lg border-2 border-blue-300 bg-blue-50 px-4 py-3.5 font-mono text-lg font-medium leading-relaxed tracking-wide dark:border-blue-800 dark:bg-blue-950">
+      <div className="mb-4 break-all rounded-lg border-2 border-blue-300 bg-blue-50 px-5 py-4 font-mono text-xl font-medium leading-relaxed tracking-wide dark:border-blue-800 dark:bg-blue-950">
         {displayText}
       </div>
 
@@ -196,7 +196,7 @@ function ValidResultCard({
         </div>
       )}
 
-      <div className="border-t border-zinc-100 pt-3.5 dark:border-zinc-800">
+      <div className="border-t border-zinc-100 pt-4 dark:border-zinc-800">
         <p className="mb-2.5 flex items-center gap-1.5 text-xs text-zinc-400">
           <PaletteIcon className="h-3.5 w-3.5" />
           塩基の色分け・構成比・ペアリング
@@ -248,12 +248,12 @@ function ValidResultCard({
           </p>
         )}
 
-        <div className="mt-3.5 grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-zinc-50 p-3.5 dark:bg-zinc-800">
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-800">
             <p className="mb-1 text-xs text-zinc-400">配列長</p>
             <p className="text-xl font-medium">{baseArr.length} 塩基</p>
           </div>
-          <div className="rounded-lg bg-zinc-50 p-3.5 dark:bg-zinc-800">
+          <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-800">
             <p className="mb-1.5 text-xs text-zinc-400">GC含量</p>
             <p className="mb-1.5 text-xl font-medium">{gcPct}%</p>
             <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">

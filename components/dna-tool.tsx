@@ -90,67 +90,67 @@ export function DnaTool({ initialSeq }: { initialSeq: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-[900px] overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="mx-auto w-full max-w-[1240px] overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
       <Hero />
 
-      <div className="grid grid-cols-1 gap-6 p-6 lg:grid-cols-[minmax(0,1fr)_240px]">
+      <div className="grid grid-cols-1 gap-8 p-8 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
-          <div className="mb-1.5 flex items-center justify-between gap-2">
-            <label htmlFor="seq" className="text-[13px] text-zinc-500">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <label htmlFor="seq" className="text-sm text-zinc-500">
               DNA配列(A, T, G, C) / FASTA形式
             </label>
             {formatLabel && (
-              <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-[11px] text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+              <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                 {formatLabel}
               </span>
             )}
           </div>
           <textarea
             id="seq"
-            rows={6}
+            rows={7}
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
             placeholder={">配列名(任意)\nATGCCGTAAGCTTG"}
-            className="w-full resize-y rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2.5 font-mono text-[13px] text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+            className="w-full resize-y rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 font-mono text-sm text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
           />
 
           {isEmptySubmit && (
-            <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+            <div className="mt-3 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
               <AlertIcon className="h-4 w-4 flex-shrink-0" />
               配列が入力されていません
             </div>
           )}
 
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
             <button
               type="button"
               onClick={handleConvert}
-              className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-[15px] font-medium text-white hover:bg-blue-700"
             >
-              <RepeatIcon className="h-[15px] w-[15px]" />
+              <RepeatIcon className="h-4 w-4" />
               相補鎖に変換する
             </button>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={handleSample}
-                className="flex items-center gap-1 rounded-md border border-zinc-200 px-3 py-1.5 text-[13px] hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+                className="flex items-center gap-1.5 rounded-md border border-zinc-200 px-3.5 py-2 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
               >
-                <WandIcon className="h-3.5 w-3.5" />
+                <WandIcon className="h-4 w-4" />
                 サンプル配列を入力
               </button>
               <button
                 type="button"
                 onClick={handleClear}
-                className="flex items-center gap-1 rounded-md border border-zinc-200 px-3 py-1.5 text-[13px] hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+                className="flex items-center gap-1.5 rounded-md border border-zinc-200 px-3.5 py-2 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
               >
-                <EraserIcon className="h-3.5 w-3.5" />
+                <EraserIcon className="h-4 w-4" />
                 クリア
               </button>
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-8">
             {validatedRecords?.map((record, index) => (
               <ResultCard
                 key={`${record.label}-${index}`}
@@ -173,7 +173,7 @@ export function DnaTool({ initialSeq }: { initialSeq: string }) {
             selectedEnzymeNames={selectedEnzymeNames}
             onToggleEnzyme={toggleEnzyme}
           />
-          <div className="mt-5">
+          <div className="mt-6">
             <HistoryPanel
               items={history}
               onSelect={handleSelectHistory}

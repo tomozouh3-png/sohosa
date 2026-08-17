@@ -57,9 +57,20 @@
 - [x] `npx tsc --noEmit` などで型エラーなし
 - [x] `npm run build` 通過(本番ビルドでのエラー・警告なし)
 - [x] ブラウザでの手動確認(サンプル配列/複数FASTA/履歴/mRNA/制限酵素ハイライト/`?seq=`共有リンクを確認。エラー入力の再現は未確認)
-- [ ] OGPプレビュー確認(SNSシェアデバッガ等)
+- [x] OGPプレビュー確認(og:image/twitter:imageの実画像を取得し表示崩れがないことを確認)
 - [x] Vercelへのデプロイ設定・初回デプロイ(GitHub連携、本番URL: https://sohosa.vercel.app)
 - [x] `NEXT_PUBLIC_SITE_URL` を本番ドメインに設定(`lib/site.ts` 参照。Vercel Production環境変数に設定済み)
+- [x] エラー入力(ATGC以外の文字)の本番環境での実機確認
+
+## フェーズ5: 集客・収益化(要件定義書スコープ外の追加要望)
+
+- [x] SEO/AdSense審査/知名度向上を兼ねた説明コンテンツ追加(`components/about-section.tsx`: 使い方・逆相補鎖とは・主な機能)
+- [x] フッター追加(`components/site-footer.tsx`: GitHubへのクレジットリンク)
+- [x] JSON-LD構造化データ追加(`app/page.tsx`: schema.org WebApplication)
+- [ ] Google Search Consoleへのsitemap登録
+- [ ] SNS(X、Zenn/Qiita等)での発信
+- [ ] GitHub Sponsors有効化(`tomozouh3-png`。銀行口座登録等が必要なため本人対応。有効化後、寄付リンクをフッターに追加する)
+- [ ] Google AdSense申し込み・審査(説明コンテンツ追加後に実施推奨)。承認後、広告コードを組み込む
 
 ## デプロイ情報
 

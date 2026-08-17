@@ -57,9 +57,15 @@
 - [x] `npx tsc --noEmit` などで型エラーなし
 - [x] `npm run build` 通過(本番ビルドでのエラー・警告なし)
 - [x] ブラウザでの手動確認(サンプル配列/複数FASTA/履歴/mRNA/制限酵素ハイライト/`?seq=`共有リンクを確認。エラー入力の再現は未確認)
-- [ ] OGPプレビュー確認(SNSシェアデバッガ等) — 本番URL確定後に実施
-- [ ] Vercelへのデプロイ設定・初回デプロイ
-- [ ] `NEXT_PUBLIC_SITE_URL` を本番ドメインに設定(`lib/site.ts` 参照)
+- [ ] OGPプレビュー確認(SNSシェアデバッガ等)
+- [x] Vercelへのデプロイ設定・初回デプロイ(GitHub連携、本番URL: https://sohosa.vercel.app)
+- [x] `NEXT_PUBLIC_SITE_URL` を本番ドメインに設定(`lib/site.ts` 参照。Vercel Production環境変数に設定済み)
+
+## デプロイ情報
+
+- 本番URL: https://sohosa.vercel.app
+- GitHubリポジトリ: https://github.com/tomozouh3-png/sohosa(public)
+- Vercelプロジェクト: `tomozouh/sohosa`、GitHub連携済み。`main`へのpushで自動デプロイされる
 
 ## スコープ外(要件定義書8章と同期)
 

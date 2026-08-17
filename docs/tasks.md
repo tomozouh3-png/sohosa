@@ -67,7 +67,6 @@
 - [x] SEO/AdSense審査/知名度向上を兼ねた説明コンテンツ追加(`components/about-section.tsx`: 使い方・逆相補鎖とは・主な機能)
 - [x] フッター追加(`components/site-footer.tsx`: GitHubへのクレジットリンク)
 - [x] JSON-LD構造化データ追加(`app/page.tsx`: schema.org WebApplication)
-- [ ] Google Search Consoleへのsitemap登録
 - [ ] SNS(X、Zenn/Qiita等)での発信
 - [ ] GitHub Sponsors有効化(`tomozouh3-png`。銀行口座登録等が必要なため本人対応。有効化後、寄付リンクをフッターに追加する)
 - [x] Google AdSense申し込み・審査対応。スクリプト方式で検証失敗 → メタタグ方式(`other["google-adsense-account"]`)に切り替えて対応
@@ -81,6 +80,11 @@
 - [x] `sitemap.ts`に両ロケール+hreflang alternatesを追加
 - [x] `lib/og-image.tsx`共通化 + 各ロケールディレクトリに`opengraph-image.tsx`を配置(共有root layoutが無いと親ディレクトリのファイル規約が拾われない罠を回避)
 - [x] ブラウザ実機で発覚した2件の実行時エラーを修正(辞書の関数をClient Componentへpropsで渡さない/`beforeInteractive`スクリプトは`<body>`内に置く)。詳細は`nextjs-best-practices.md`8章
+
+## フェーズ7: アクセス解析
+
+- [x] Vercel Web Analytics導入(`@vercel/analytics/next`、両ロケールlayoutに追加。Cookie不要、配列データは収集しない)
+- [ ] Google Search Console登録・sitemap submit(検索流入の把握、フェーズ5から持ち越し)
 
 ## デプロイ情報
 

@@ -11,7 +11,7 @@ export const en: Dictionary = {
     description,
   },
   languageSwitch: {
-    label: "日本語",
+    label: "Japanese",
     href: "/",
   },
   hero: {

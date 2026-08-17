@@ -43,7 +43,6 @@ export type Dictionary = {
     enzymeSubtitle: string;
     tmTitle: string;
     tmSubtitle: string;
-    naLabel: string;
     concLabel: string;
   };
   history: {

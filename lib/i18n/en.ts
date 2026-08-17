@@ -44,7 +44,6 @@ export const en: Dictionary = {
     enzymeSubtitle: "Color-codes recognition sequences",
     tmTitle: "Show primer stats",
     tmSubtitle: "Tm, GC clamp, hairpin",
-    naLabel: "Na+ (mM)",
     concLabel: "Primer conc. (nM)",
   },
   history: {

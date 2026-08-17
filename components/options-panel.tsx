@@ -112,22 +112,6 @@ export function OptionsPanel({
         {tmMode && (
           <div className="mt-2 flex flex-col gap-3 rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
             <label className="flex items-center justify-between gap-2 text-sm">
-              {dict.options.naLabel}
-              <input
-                type="number"
-                min={1}
-                step={1}
-                value={tmParams.naMillimolar}
-                onChange={(event) =>
-                  onTmParamsChange({
-                    ...tmParams,
-                    naMillimolar: Number(event.target.value) || tmParams.naMillimolar,
-                  })
-                }
-                className="w-20"
-              />
-            </label>
-            <label className="flex items-center justify-between gap-2 text-sm">
               {dict.options.concLabel}
               <input
                 type="number"

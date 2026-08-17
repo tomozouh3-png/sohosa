@@ -44,7 +44,6 @@ export const ja: Dictionary = {
     enzymeSubtitle: "認識配列を色分け表示",
     tmTitle: "プライマー特性を表示",
     tmSubtitle: "Tm・GCクランプ・ヘアピン",
-    naLabel: "Na+濃度(mM)",
     concLabel: "プライマー濃度(nM)",
   },
   history: {

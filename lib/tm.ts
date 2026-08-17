@@ -36,7 +36,7 @@ export type TmParams = {
   primerNanomolar: number;
 };
 
-export const DEFAULT_TM_PARAMS: TmParams = { naMillimolar: 50, primerNanomolar: 250 };
+export const DEFAULT_TM_PARAMS: TmParams = { naMillimolar: 50, primerNanomolar: 100 };
 
 /**
  * Melting temperature via the SantaLucia (1998) unified nearest-neighbor

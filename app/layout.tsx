@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  other: {
+    "google-adsense-account": ADSENSE_CLIENT_ID,
+  },
   title: "DNA相補鎖ツール",
   description:
     "DNA配列やFASTA形式のデータを入力するだけで、逆相補鎖・mRNA・制限酵素認識部位を瞬時に計算できる無料のオンラインツール。",

@@ -20,11 +20,13 @@ export function AboutSection({ dict }: { dict: Dictionary }) {
       <h2 className="mb-3 text-lg font-medium text-zinc-900 dark:text-zinc-50">
         {dict.about.featuresTitle}
       </h2>
-      <ul className="list-disc space-y-1 pl-5">
+      <ul className="mb-8 list-disc space-y-1 pl-5">
         {dict.about.features.map((feature) => (
           <li key={feature}>{feature}</li>
         ))}
       </ul>
+
+      <p className="text-xs text-zinc-400">{dict.about.citation}</p>
     </section>
   );
 }

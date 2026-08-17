@@ -22,5 +22,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
       alternates: { languages },
     },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+      alternates: {
+        languages: { ja: `${SITE_URL}/privacy`, en: `${SITE_URL}/en/privacy` },
+      },
+    },
+    {
+      url: `${SITE_URL}/en/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+      alternates: {
+        languages: { ja: `${SITE_URL}/privacy`, en: `${SITE_URL}/en/privacy` },
+      },
+    },
   ];
 }

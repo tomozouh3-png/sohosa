@@ -95,10 +95,14 @@ export const ja: Dictionary = {
       "配列長・GC含量・塩基構成比の表示",
       "入力履歴の保存(ブラウザ内のみ。配列はサーバーに送信されません)",
     ],
+    citation:
+      "Tm値の計算は SantaLucia J Jr. (1998) 'A unified view of polymer, dumbbell, and oligonucleotide DNA nearest-neighbor thermodynamics.' PNAS 95(4):1460-1465. のnearest-neighbor法パラメータに基づいています。",
   },
   footer: {
     text: "DNA相補鎖ツールはオープンソースで公開しています。バグ報告・要望は",
     githubLabel: "GitHub",
+    privacyLabel: "プライバシーポリシー",
+    privacyHref: "/privacy",
   },
   share: {
     heading: "シェア",

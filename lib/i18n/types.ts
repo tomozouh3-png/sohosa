@@ -81,10 +81,13 @@ export type Dictionary = {
     aboutBody: string;
     featuresTitle: string;
     features: string[];
+    citation: string;
   };
   footer: {
     text: string;
     githubLabel: string;
+    privacyLabel: string;
+    privacyHref: string;
   };
   share: {
     heading: string;

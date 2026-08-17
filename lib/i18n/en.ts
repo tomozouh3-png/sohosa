@@ -95,10 +95,14 @@ export const en: Dictionary = {
       "Shows sequence length, GC content, and base composition",
       "Saves input history locally in your browser — sequences are never sent to a server",
     ],
+    citation:
+      "Tm calculations use the nearest-neighbor thermodynamic parameters from SantaLucia J Jr. (1998), 'A unified view of polymer, dumbbell, and oligonucleotide DNA nearest-neighbor thermodynamics,' PNAS 95(4):1460-1465.",
   },
   footer: {
     text: "DNA Complement Tool is open source. Bug reports and feature requests are welcome on",
     githubLabel: "GitHub",
+    privacyLabel: "Privacy policy",
+    privacyHref: "/en/privacy",
   },
   share: {
     heading: "Share",

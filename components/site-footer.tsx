@@ -13,6 +13,11 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
         </a>
         .
       </p>
+      <p className="mt-2">
+        <a href={dict.footer.privacyHref} className="underline hover:text-zinc-600 dark:hover:text-zinc-300">
+          {dict.footer.privacyLabel}
+        </a>
+      </p>
     </footer>
   );
 }

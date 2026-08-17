@@ -95,6 +95,14 @@
 - [x] ja/en両方の翻訳・about欄の機能一覧を更新
 - [x] ブラウザ実機で3配列(通常/制限酵素確認用/意図的ヘアピン配列)を使い、Tm値・GCクランプ・ヘアピン判定が日英で一致することを確認
 
+## フェーズ9: 法的文書・帰属表示
+
+- [x] MITライセンス(`LICENSE`)を追加、`package.json`の`license`フィールドも設定
+- [x] プライバシーポリシーページ(`/privacy`, `/en/privacy`)を追加。配列データを送信しないこと・入力履歴はlocalStorageのみ・Vercel Web Analytics・Google AdSense・第三者リンクについて記載。フッターからリンク
+- [x] AboutセクションにSantaLucia (1998) の引用を追加(Tm計算の根拠として)
+- [x] `sitemap.ts`にプライバシーポリシー2ページ(hreflang alternates付き)を追加
+- [x] ブラウザ実機で日英両方のプライバシーポリシーページ・フッターリンクの遷移を確認
+
 ## デプロイ情報
 
 - 本番URL: https://sohosa.vercel.app

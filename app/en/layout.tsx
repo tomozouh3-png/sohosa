@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { geistMono, geistSans } from "@/lib/fonts";
@@ -25,6 +26,7 @@ export default function EnRootLayout({ children }: LayoutProps<"/en">) {
           />
         )}
         {children}
+        <Analytics />
       </body>
     </html>
   );

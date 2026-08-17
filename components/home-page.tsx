@@ -1,5 +1,6 @@
 import { AboutSection } from "@/components/about-section";
 import { DnaTool } from "@/components/dna-tool";
+import { ShareButtons } from "@/components/share-buttons";
 import { SiteFooter } from "@/components/site-footer";
 import type { Dictionary } from "@/lib/i18n";
 import { buildJsonLd } from "@/lib/site";
@@ -14,6 +15,7 @@ export function HomePage({ dict, initialSeq }: { dict: Dictionary; initialSeq: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <DnaTool locale={dict.locale} initialSeq={initialSeq} />
+      <ShareButtons locale={dict.locale} />
       <AboutSection dict={dict} />
       <SiteFooter dict={dict} />
     </div>

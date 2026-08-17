@@ -72,4 +72,11 @@ export type Dictionary = {
     text: string;
     githubLabel: string;
   };
+  share: {
+    heading: string;
+    xLabel: string;
+    copyLabel: string;
+    copiedLabel: string;
+    tweetText: string;
+  };
 };

@@ -85,4 +85,12 @@ export const en: Dictionary = {
     text: "DNA Complement Tool is open source. Bug reports and feature requests are welcome on",
     githubLabel: "GitHub",
   },
+  share: {
+    heading: "Share",
+    xLabel: "Share on X",
+    copyLabel: "Copy link",
+    copiedLabel: "Copied",
+    tweetText:
+      "DNA Complement Tool — instantly get the reverse complement, mRNA, and restriction sites from any DNA sequence, free and in your browser.",
+  },
 };

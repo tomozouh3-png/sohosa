@@ -115,3 +115,11 @@ export function ScissorsIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function XIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M18.9 2.1h3.3l-7.2 8.2 8.5 11.6h-6.6l-5.2-6.8-6 6.8H2.4l7.7-8.8L1.9 2.1h6.8l4.7 6.2ZM17.7 20h1.8L6.4 4H4.5Z" />
+    </svg>
+  );
+}

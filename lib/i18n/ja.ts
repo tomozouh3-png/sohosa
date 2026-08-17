@@ -85,4 +85,12 @@ export const ja: Dictionary = {
     text: "DNA相補鎖ツールはオープンソースで公開しています。バグ報告・要望は",
     githubLabel: "GitHub",
   },
+  share: {
+    heading: "シェア",
+    xLabel: "Xでシェア",
+    copyLabel: "リンクをコピー",
+    copiedLabel: "コピーしました",
+    tweetText:
+      "DNA配列から逆相補鎖・mRNA・制限酵素認識部位を瞬時に計算できる無料ツール「DNA相補鎖ツール」",
+  },
 };

@@ -1,7 +1,7 @@
 import type { Dictionary } from "./types";
 
 const description =
-  "Paste a DNA sequence or FASTA data and instantly get the reverse complement, mRNA, and restriction site highlights. Free, no sign-up, runs entirely in your browser.";
+  "Paste a DNA sequence or FASTA data and instantly get the reverse complement, mRNA, restriction site highlights, and primer Tm. Free, no sign-up, runs entirely in your browser.";
 
 export const en: Dictionary = {
   locale: "en",
@@ -16,7 +16,7 @@ export const en: Dictionary = {
   },
   hero: {
     title: "DNA Complement Tool",
-    subtitle: "Reverse complement and mRNA in an instant, with FASTA support",
+    subtitle: "Reverse complement, mRNA, and primer Tm in an instant, with FASTA support",
   },
   input: {
     label: "DNA sequence (A, T, G, C) / FASTA",
@@ -42,6 +42,10 @@ export const en: Dictionary = {
     mrnaSubtitle: "Replaces T with U",
     enzymeTitle: "Highlight restriction sites",
     enzymeSubtitle: "Color-codes recognition sequences",
+    tmTitle: "Show primer stats",
+    tmSubtitle: "Tm, GC clamp, hairpin",
+    naLabel: "Na+ (mM)",
+    concLabel: "Primer conc. (nM)",
   },
   history: {
     title: "History (up to 30)",
@@ -60,13 +64,24 @@ export const en: Dictionary = {
     lengthLabel: "Length",
     lengthValue: (length) => `${length} bp`,
     gcLabel: "GC content",
+    tmSectionTitle: "Primer properties (input sequence)",
+    tmValue: (celsius) => `${celsius}°C`,
+    gcClampLabel: "GC clamp",
+    gcClampGood: "Good",
+    gcClampGoodMsg: "Healthy G/C clamp at the 3' end",
+    gcClampWarn: "Check",
+    gcClampWarnMsg: "Uneven G/C at the 3' end (weak binding or mispriming risk)",
+    hairpinLabel: "Hairpin",
+    hairpinNone: "No hairpin detected",
+    hairpinFound: (stemLength) => `Possible hairpin (stem ${stemLength} bp)`,
+    tooShortForTm: (min) => `Recommend at least ${min} bp for a reliable Tm`,
   },
   about: {
     usageTitle: "How to use it",
     steps: [
       "Paste a DNA sequence (A, T, G, C) or FASTA-formatted text into the input box",
       "Click \"Convert\"",
-      "See the reverse complement (5'→3'), length, GC content, mRNA view, and restriction sites",
+      "See the reverse complement (5'→3'), length, GC content, mRNA view, restriction sites, and primer Tm",
     ],
     aboutTitle: "What is a reverse complement?",
     aboutBody:
@@ -77,6 +92,7 @@ export const en: Dictionary = {
       "Computes the reverse complement (5'→3')",
       "Toggle to view as mRNA (T→U)",
       "Highlights restriction sites (EcoRI, BamHI, HindIII, XhoI, NotI)",
+      "Calculates primer Tm, GC clamp, and hairpin risk (nearest-neighbor method)",
       "Shows sequence length, GC content, and base composition",
       "Saves input history locally in your browser — sequences are never sent to a server",
     ],

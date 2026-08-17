@@ -5,6 +5,7 @@ import { DEFAULT_ENZYME_NAMES, ENZYME_PRESETS } from "@/lib/enzymes";
 import { parseFasta } from "@/lib/fasta";
 import { useHistory } from "@/lib/history";
 import { getDictionary, type Dictionary, type Locale } from "@/lib/i18n";
+import { DEFAULT_TM_PARAMS, type TmParams } from "@/lib/tm";
 import { findInvalidChars } from "@/lib/validate";
 import { Hero } from "./hero";
 import { HistoryPanel } from "./history-panel";
@@ -36,6 +37,8 @@ export function DnaTool({ locale, initialSeq }: { locale: Locale; initialSeq: st
   const [mrnaMode, setMrnaMode] = useState(false);
   const [enzymeMode, setEnzymeMode] = useState(false);
   const [selectedEnzymeNames, setSelectedEnzymeNames] = useState<string[]>(DEFAULT_ENZYME_NAMES);
+  const [tmMode, setTmMode] = useState(false);
+  const [tmParams, setTmParams] = useState<TmParams>(DEFAULT_TM_PARAMS);
   const { history, addItem: addHistoryItem, clear: clearHistoryItems } = useHistory();
 
   const validatedRecords: ValidatedRecord[] | null = useMemo(() => {
@@ -162,6 +165,8 @@ export function DnaTool({ locale, initialSeq }: { locale: Locale; initialSeq: st
                 mrnaMode={mrnaMode}
                 enzymeMode={enzymeMode}
                 selectedEnzymes={selectedEnzymes}
+                tmMode={tmMode}
+                tmParams={tmParams}
               />
             ))}
           </div>
@@ -177,6 +182,10 @@ export function DnaTool({ locale, initialSeq }: { locale: Locale; initialSeq: st
             enzymes={ENZYME_PRESETS}
             selectedEnzymeNames={selectedEnzymeNames}
             onToggleEnzyme={toggleEnzyme}
+            tmMode={tmMode}
+            onTmModeChange={setTmMode}
+            tmParams={tmParams}
+            onTmParamsChange={setTmParams}
           />
           <div className="mt-6">
             <HistoryPanel

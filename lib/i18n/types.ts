@@ -41,6 +41,10 @@ export type Dictionary = {
     mrnaSubtitle: string;
     enzymeTitle: string;
     enzymeSubtitle: string;
+    tmTitle: string;
+    tmSubtitle: string;
+    naLabel: string;
+    concLabel: string;
   };
   history: {
     title: string;
@@ -59,6 +63,17 @@ export type Dictionary = {
     lengthLabel: string;
     lengthValue: (length: number) => string;
     gcLabel: string;
+    tmSectionTitle: string;
+    tmValue: (celsius: number) => string;
+    gcClampLabel: string;
+    gcClampGood: string;
+    gcClampGoodMsg: string;
+    gcClampWarn: string;
+    gcClampWarnMsg: string;
+    hairpinLabel: string;
+    hairpinNone: string;
+    hairpinFound: (stemLength: number) => string;
+    tooShortForTm: (min: number) => string;
   };
   about: {
     usageTitle: string;

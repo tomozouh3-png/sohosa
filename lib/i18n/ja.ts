@@ -1,7 +1,7 @@
 import type { Dictionary } from "./types";
 
 const description =
-  "DNA配列やFASTA形式のデータを入力するだけで、逆相補鎖・mRNA・制限酵素認識部位を瞬時に計算できる無料のオンラインツール。";
+  "DNA配列やFASTA形式のデータを入力するだけで、逆相補鎖・mRNA・制限酵素認識部位・プライマーのTm値まで瞬時に計算できる無料のオンラインツール。";
 
 export const ja: Dictionary = {
   locale: "ja",
@@ -16,7 +16,7 @@ export const ja: Dictionary = {
   },
   hero: {
     title: "DNA相補鎖ツール",
-    subtitle: "DNA配列・FASTA形式に対応、逆相補鎖とmRNAを瞬時に計算",
+    subtitle: "DNA配列・FASTA形式に対応、逆相補鎖・mRNA・プライマーTmを瞬時に計算",
   },
   input: {
     label: "DNA配列(A, T, G, C) / FASTA形式",
@@ -42,6 +42,10 @@ export const ja: Dictionary = {
     mrnaSubtitle: "T→Uに置換して表示",
     enzymeTitle: "制限酵素部位をハイライト",
     enzymeSubtitle: "認識配列を色分け表示",
+    tmTitle: "プライマー特性を表示",
+    tmSubtitle: "Tm・GCクランプ・ヘアピン",
+    naLabel: "Na+濃度(mM)",
+    concLabel: "プライマー濃度(nM)",
   },
   history: {
     title: "入力履歴(最大30件)",
@@ -60,13 +64,24 @@ export const ja: Dictionary = {
     lengthLabel: "配列長",
     lengthValue: (length) => `${length} 塩基`,
     gcLabel: "GC含量",
+    tmSectionTitle: "プライマー特性(入力配列)",
+    tmValue: (celsius) => `${celsius}°C`,
+    gcClampLabel: "GCクランプ",
+    gcClampGood: "良好",
+    gcClampGoodMsg: "3'末端に適度なG/Cクランプがあります",
+    gcClampWarn: "要注意",
+    gcClampWarnMsg: "3'末端のG/C構成が偏っています(結合が弱い、またはミスプライミングのリスク)",
+    hairpinLabel: "ヘアピン",
+    hairpinNone: "ヘアピン形成なし",
+    hairpinFound: (stemLength) => `ヘアピン形成の可能性(茎${stemLength}bp)`,
+    tooShortForTm: (min) => `Tm計算には${min}塩基以上を推奨します`,
   },
   about: {
     usageTitle: "使い方",
     steps: [
       "DNA配列(A, T, G, C)またはFASTA形式のテキストを入力欄に貼り付けます",
       "「相補鎖に変換する」ボタンを押します",
-      "逆相補鎖(5'→3')・配列長・GC含量・mRNA表示・制限酵素認識部位などが表示されます",
+      "逆相補鎖(5'→3')・配列長・GC含量・mRNA表示・制限酵素認識部位・Tm値などが表示されます",
     ],
     aboutTitle: "逆相補鎖(リバースコンプリメント)とは",
     aboutBody:
@@ -77,6 +92,7 @@ export const ja: Dictionary = {
       "逆相補鎖(5'→3')の計算",
       "mRNA表示(T→U)への切り替え",
       "制限酵素認識部位(EcoRI, BamHI, HindIII, XhoI, NotI)のハイライト表示",
+      "プライマーのTm値・GCクランプ・ヘアピン形成の判定(nearest-neighbor法)",
       "配列長・GC含量・塩基構成比の表示",
       "入力履歴の保存(ブラウザ内のみ。配列はサーバーに送信されません)",
     ],

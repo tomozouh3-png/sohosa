@@ -84,7 +84,16 @@
 ## フェーズ7: アクセス解析
 
 - [x] Vercel Web Analytics導入(`@vercel/analytics/next`、両ロケールlayoutに追加。Cookie不要、配列データは収集しない)
-- [ ] Google Search Console登録・sitemap submit(検索流入の把握、フェーズ5から持ち越し)
+- [x] Google Search Console登録用のverificationメタタグ追加(`verification.google`)。sitemap submitはユーザー側の作業として依頼済み
+
+## フェーズ8: プライマー特性(Tm・GCクランプ・ヘアピン)
+
+- [x] `lib/tm.ts`: SantaLucia (1998) nearest-neighbor法によるTm計算、GCクランプ判定、ヘアピン検出(自己相補領域スキャン)
+- [x] サイドバーに3つ目のトグル追加(Na+濃度・プライマー濃度の入力欄つき)
+- [x] 各結果カードに「プライマー特性」セクションを追加(入力配列に対して計算。出力の逆相補鎖ではない)
+- [x] ヘアピン検出時は自己相補領域を配列上で赤くハイライト
+- [x] ja/en両方の翻訳・about欄の機能一覧を更新
+- [x] ブラウザ実機で3配列(通常/制限酵素確認用/意図的ヘアピン配列)を使い、Tm値・GCクランプ・ヘアピン判定が日英で一致することを確認
 
 ## デプロイ情報
 

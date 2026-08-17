@@ -4,10 +4,12 @@ import { useState, type ReactNode } from "react";
 import { baseComposition, gcContent, reverseComplement, toMrna } from "@/lib/dna";
 import { findSites, type Enzyme } from "@/lib/enzymes";
 import type { Dictionary } from "@/lib/i18n";
+import { calculateTm, checkGcClamp, findHairpin, type TmParams } from "@/lib/tm";
 import { BasePill } from "./base-pill";
-import { AlertIcon, CheckIcon, CopyIcon, DnaIcon, PaletteIcon } from "./icons";
+import { AlertIcon, CheckIcon, CopyIcon, DnaIcon, PaletteIcon, ThermometerIcon } from "./icons";
 
 const LADDER_LIMIT = 80;
+const MIN_TM_LENGTH = 8;
 const BASE_ORDER = ["A", "T", "U", "G", "C"];
 const COMPLEMENT: Record<string, string> = { A: "T", T: "A", G: "C", C: "G" };
 
@@ -79,18 +81,53 @@ function renderHighlighted(
   return nodes;
 }
 
+function renderHairpinHighlight(
+  seq: string,
+  hairpin: { armStart1: number; armStart2: number; stemLength: number }
+): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let i = 0;
+  while (i < seq.length) {
+    const inArm1 = i >= hairpin.armStart1 && i < hairpin.armStart1 + hairpin.stemLength;
+    const inArm2 = i >= hairpin.armStart2 && i < hairpin.armStart2 + hairpin.stemLength;
+    let j = i + 1;
+    while (j < seq.length) {
+      const jInArm1 = j >= hairpin.armStart1 && j < hairpin.armStart1 + hairpin.stemLength;
+      const jInArm2 = j >= hairpin.armStart2 && j < hairpin.armStart2 + hairpin.stemLength;
+      if ((jInArm1 || jInArm2) !== (inArm1 || inArm2)) break;
+      j++;
+    }
+    const chunk = seq.slice(i, j);
+    nodes.push(
+      inArm1 || inArm2 ? (
+        <span key={i} className="rounded bg-red-600 px-0.5 font-medium text-white">
+          {chunk}
+        </span>
+      ) : (
+        chunk
+      )
+    );
+    i = j;
+  }
+  return nodes;
+}
+
 export function ResultCard({
   dict,
   record,
   mrnaMode,
   enzymeMode,
   selectedEnzymes,
+  tmMode,
+  tmParams,
 }: {
   dict: Dictionary;
   record: ValidatedRecord;
   mrnaMode: boolean;
   enzymeMode: boolean;
   selectedEnzymes: Enzyme[];
+  tmMode: boolean;
+  tmParams: TmParams;
 }) {
   if (record.invalid.length > 0) {
     return (
@@ -110,6 +147,8 @@ export function ResultCard({
       mrnaMode={mrnaMode}
       enzymeMode={enzymeMode}
       selectedEnzymes={selectedEnzymes}
+      tmMode={tmMode}
+      tmParams={tmParams}
     />
   );
 }
@@ -120,12 +159,16 @@ function ValidResultCard({
   mrnaMode,
   enzymeMode,
   selectedEnzymes,
+  tmMode,
+  tmParams,
 }: {
   dict: Dictionary;
   record: ValidatedRecord;
   mrnaMode: boolean;
   enzymeMode: boolean;
   selectedEnzymes: Enzyme[];
+  tmMode: boolean;
+  tmParams: TmParams;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -138,6 +181,12 @@ function ValidResultCard({
 
   const showEnzyme = enzymeMode && selectedEnzymes.length > 0;
   const siteMap = showEnzyme ? findSites(record.raw, selectedEnzymes) : null;
+
+  const showTm = tmMode;
+  const tmEligible = baseArr.length >= MIN_TM_LENGTH;
+  const tmValue = tmEligible ? calculateTm(record.raw, tmParams) : null;
+  const gcClamp = tmEligible ? checkGcClamp(record.raw) : null;
+  const hairpin = tmEligible ? findHairpin(record.raw) : null;
 
   const composition = baseComposition(displayArr.join(""));
   const orderedBases = BASE_ORDER.filter((base) => composition[base] > 0);
@@ -175,6 +224,92 @@ function ValidResultCard({
       <div className="mb-4 break-all rounded-lg border-2 border-blue-300 bg-blue-50 px-5 py-4 font-mono text-xl font-medium leading-relaxed tracking-wide dark:border-blue-800 dark:bg-blue-950">
         {displayText}
       </div>
+
+      {showTm && (
+        <div className="mb-3.5 border-t border-zinc-100 pt-3.5 dark:border-zinc-800">
+          <p className="mb-2 flex items-center gap-1.5 text-xs text-zinc-400">
+            <ThermometerIcon className="h-3.5 w-3.5" />
+            {dict.result.tmSectionTitle}
+          </p>
+          {!tmEligible || tmValue === null || gcClamp === null ? (
+            <p className="text-sm text-zinc-400">{dict.result.tooShortForTm(MIN_TM_LENGTH)}</p>
+          ) : (
+            <>
+              <div className="mb-2 grid grid-cols-3 gap-3">
+                <div className="rounded-lg bg-amber-50 p-3 dark:bg-amber-950">
+                  <p className="mb-0.5 text-[11px] text-amber-700 dark:text-amber-300">Tm</p>
+                  <p className="text-lg font-medium text-amber-700 dark:text-amber-300">
+                    {dict.result.tmValue(Math.round(tmValue * 10) / 10)}
+                  </p>
+                </div>
+                <div
+                  className={`rounded-lg p-3 ${
+                    gcClamp.level === "good"
+                      ? "bg-green-50 dark:bg-green-950"
+                      : "bg-amber-50 dark:bg-amber-950"
+                  }`}
+                >
+                  <p
+                    className={`mb-0.5 text-[11px] ${
+                      gcClamp.level === "good"
+                        ? "text-green-700 dark:text-green-300"
+                        : "text-amber-700 dark:text-amber-300"
+                    }`}
+                  >
+                    {dict.result.gcClampLabel}
+                  </p>
+                  <p
+                    className={`text-sm font-medium ${
+                      gcClamp.level === "good"
+                        ? "text-green-700 dark:text-green-300"
+                        : "text-amber-700 dark:text-amber-300"
+                    }`}
+                  >
+                    {gcClamp.level === "good" ? dict.result.gcClampGood : dict.result.gcClampWarn}
+                  </p>
+                </div>
+                <div
+                  className={`rounded-lg p-3 ${
+                    hairpin ? "bg-red-50 dark:bg-red-950" : "bg-green-50 dark:bg-green-950"
+                  }`}
+                >
+                  <p
+                    className={`mb-0.5 text-[11px] ${
+                      hairpin
+                        ? "text-red-700 dark:text-red-300"
+                        : "text-green-700 dark:text-green-300"
+                    }`}
+                  >
+                    {dict.result.hairpinLabel}
+                  </p>
+                  <p
+                    className={`text-sm font-medium ${
+                      hairpin
+                        ? "text-red-700 dark:text-red-300"
+                        : "text-green-700 dark:text-green-300"
+                    }`}
+                  >
+                    {hairpin ? `${hairpin.stemLength}bp` : dict.result.hairpinNone}
+                  </p>
+                </div>
+              </div>
+              <p className="mb-2 text-xs text-zinc-500">
+                {gcClamp.level === "good" ? dict.result.gcClampGoodMsg : dict.result.gcClampWarnMsg}
+              </p>
+              {hairpin && (
+                <>
+                  <p className="mb-1.5 text-xs text-zinc-500">
+                    {dict.result.hairpinFound(hairpin.stemLength)}
+                  </p>
+                  <div className="break-all rounded-lg bg-zinc-50 px-3 py-2.5 font-mono text-[13px] leading-loose dark:bg-zinc-800">
+                    {renderHairpinHighlight(record.raw, hairpin)}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       {showEnzyme && siteMap && (
         <div className="mb-3.5 border-t border-zinc-100 pt-3.5 dark:border-zinc-800">

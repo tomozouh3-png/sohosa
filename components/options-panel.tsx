@@ -1,6 +1,7 @@
 import type { Enzyme } from "@/lib/enzymes";
 import type { Dictionary } from "@/lib/i18n";
-import { ScissorsIcon, TransformIcon } from "./icons";
+import type { TmParams } from "@/lib/tm";
+import { ScissorsIcon, ThermometerIcon, TransformIcon } from "./icons";
 import { ToggleSwitch } from "./toggle-switch";
 
 type OptionsPanelProps = {
@@ -12,6 +13,10 @@ type OptionsPanelProps = {
   enzymes: Enzyme[];
   selectedEnzymeNames: string[];
   onToggleEnzyme: (name: string) => void;
+  tmMode: boolean;
+  onTmModeChange: (checked: boolean) => void;
+  tmParams: TmParams;
+  onTmParamsChange: (params: TmParams) => void;
 };
 
 export function OptionsPanel({
@@ -23,6 +28,10 @@ export function OptionsPanel({
   enzymes,
   selectedEnzymeNames,
   onToggleEnzyme,
+  tmMode,
+  onTmModeChange,
+  tmParams,
+  onTmParamsChange,
 }: OptionsPanelProps) {
   return (
     <div className="flex flex-col gap-3">
@@ -78,6 +87,62 @@ export function OptionsPanel({
                 <span className="font-mono text-xs text-zinc-400">({enzyme.site})</span>
               </label>
             ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between gap-3 rounded-xl bg-amber-50 p-4 dark:bg-amber-950">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white dark:bg-zinc-900">
+              <ThermometerIcon className="h-[18px] w-[18px] text-amber-600 dark:text-amber-400" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-sm font-medium text-amber-700 dark:text-amber-300">
+                {dict.options.tmTitle}
+              </span>
+              <span className="block text-xs text-amber-700 dark:text-amber-300">
+                {dict.options.tmSubtitle}
+              </span>
+            </span>
+          </div>
+          <ToggleSwitch checked={tmMode} onChange={onTmModeChange} label={dict.options.tmTitle} />
+        </div>
+
+        {tmMode && (
+          <div className="mt-2 flex flex-col gap-3 rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
+            <label className="flex items-center justify-between gap-2 text-sm">
+              {dict.options.naLabel}
+              <input
+                type="number"
+                min={1}
+                step={1}
+                value={tmParams.naMillimolar}
+                onChange={(event) =>
+                  onTmParamsChange({
+                    ...tmParams,
+                    naMillimolar: Number(event.target.value) || tmParams.naMillimolar,
+                  })
+                }
+                className="w-20"
+              />
+            </label>
+            <label className="flex items-center justify-between gap-2 text-sm">
+              {dict.options.concLabel}
+              <input
+                type="number"
+                min={1}
+                step={1}
+                value={tmParams.primerNanomolar}
+                onChange={(event) =>
+                  onTmParamsChange({
+                    ...tmParams,
+                    primerNanomolar: Number(event.target.value) || tmParams.primerNanomolar,
+                  })
+                }
+                className="w-20"
+              />
+            </label>
           </div>
         )}
       </div>

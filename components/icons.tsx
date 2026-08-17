@@ -116,6 +116,15 @@ export function ScissorsIcon({ className }: IconProps) {
   );
 }
 
+export function ThermometerIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M10 13.5V4a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0Z" />
+      <path d="M12 9h1.5" />
+    </svg>
+  );
+}
+
 export function XIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>

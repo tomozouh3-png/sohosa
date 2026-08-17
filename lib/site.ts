@@ -13,6 +13,9 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com
  */
 export const ADSENSE_CLIENT_ID = "ca-pub-8012498334257593";
 
+/** Google Search Console site-verification token (URL-prefix property covers both locales). */
+export const GOOGLE_SITE_VERIFICATION = "Xt3aP3NtvFsuPMH1odWGOzEp37UoVUtXceNEFO-RyM0";
+
 const LOCALE_PATHS = { ja: "", en: "/en" } as const;
 
 /** Builds the shared metadata object for a locale's root layout. */
@@ -21,6 +24,9 @@ export function buildMetadata(dict: Dictionary): Metadata {
     metadataBase: new URL(SITE_URL),
     other: {
       "google-adsense-account": ADSENSE_CLIENT_ID,
+    },
+    verification: {
+      google: GOOGLE_SITE_VERIFICATION,
     },
     title: dict.meta.title,
     description: dict.meta.description,
